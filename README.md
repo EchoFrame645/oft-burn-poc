@@ -1,13 +1,26 @@
-# Sample Hardhat Project
+# 🔥 OFT Burn Exploit Proof of Concept
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This repository demonstrates a security vulnerability in LayerZero’s OFT (`Omnichain Fungible Token`) implementation. The exploit shows that tokens can be burned on the source chain even if the cross-chain message delivery fails.
 
-Try running some of the following tasks:
+---
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
+## ⚠️ Vulnerability Summary
+
+In `OFT.sol`, the `sendFrom()` function debits (burns) tokens on the source chain **before** ensuring message delivery success. If `_lzSend()` fails, the tokens are lost — breaking atomicity.
+
+---
+
+## ✅ How to Reproduce the Exploit
+
+### 🔧 Prerequisites
+
+- Docker installed on your system
+- Basic shell/terminal usage
+
+### 🐳 Steps
+
+```bash
+git clone https://github.com/your-name/oft-burn-poc.git
+cd oft-burn-poc
+docker build -t oft-burn-poc .
+docker run --rm oft-burn-poc
